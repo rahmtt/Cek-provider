@@ -4,7 +4,7 @@ const btn = $("btn");
 const resultsContainer = $("results-container");
 const rawOut = $("raw-out");
 
-// --- MODAL LOGIC (Baru) ---
+// --- MODAL LOGIC ---
 const modal = $("info-modal");
 const openModalBtn = $("open-info");
 const closeModalBtn = $("close-info");
@@ -13,14 +13,12 @@ const toggleModal = () => modal.classList.toggle("open");
 
 openModalBtn.addEventListener("click", toggleModal);
 closeModalBtn.addEventListener("click", toggleModal);
-// Tutup modal jika user klik di luar area konten modal
 modal.addEventListener("click", (e) => {
   if (e.target === modal) toggleModal();
 });
 
 
-// --- DATA PARSING LOGIC (Tetap Aman) ---
-
+// --- DATA PARSING LOGIC ---
 function showError(message) {
   resultsContainer.innerHTML = "";
   rawOut.style.display = "block";
@@ -42,14 +40,23 @@ function renderHumanReadable(dataObj) {
     const cardInfo = document.createElement("div");
     cardInfo.className = "result-card bg-pink";
     
+    // Logic Status ID
+    let statusRegistrasi = s.id_verified;
+    if (s.id_verified === "Sudah") {
+      statusRegistrasi = "✅ Terdaftar (NIK/KK)";
+    } else if (s.id_verified === "Belum") {
+      statusRegistrasi = "❌ Belum Registrasi";
+    }
+
+    // Ditambah Icon FontAwesome biar makin enak dibaca
     cardInfo.innerHTML = `
-      <h3>INFO KARTU</h3>
-      <div class="data-row"><span>Nomor HP:</span> <strong>${s.msisdn || '-'}</strong></div>
-      <div class="data-row"><span>Operator:</span> <strong>${s.operator || '-'}</strong></div>
-      <div class="data-row"><span>Status ID:</span> <strong>${s.id_verified || '-'}</strong></div>
-      <div class="data-row"><span>Jaringan:</span> <strong>${s.net_type || '-'}</strong></div>
-      <div class="data-row"><span>Masa Aktif:</span> <strong>${s.exp_date || '-'}</strong></div>
-      <div class="data-row"><span>Masa Tenggang:</span> <strong>${s.grace_until || '-'}</strong></div>
+      <h3><i class="fa-solid fa-sim-card"></i> INFO KARTU</h3>
+      <div class="data-row"><span><i class="fa-solid fa-phone"></i> Nomor HP:</span> <strong>${s.msisdn || '-'}</strong></div>
+      <div class="data-row"><span><i class="fa-solid fa-tower-cell"></i> Operator:</span> <strong>${s.operator || '-'}</strong></div>
+      <div class="data-row"><span><i class="fa-solid fa-id-card-clip"></i> Registrasi NIK:</span> <strong>${statusRegistrasi}</strong></div>
+      <div class="data-row"><span><i class="fa-solid fa-signal"></i> Jaringan:</span> <strong>${s.net_type || '-'}</strong></div>
+      <div class="data-row"><span><i class="fa-regular fa-calendar-check"></i> Masa Aktif:</span> <strong>${s.exp_date || '-'}</strong></div>
+      <div class="data-row"><span><i class="fa-solid fa-triangle-exclamation"></i> Masa Tenggang:</span> <strong>${s.grace_until || '-'}</strong></div>
     `;
     resultsContainer.appendChild(cardInfo);
   }
@@ -60,7 +67,7 @@ function renderHumanReadable(dataObj) {
     const cardPkg = document.createElement("div");
     cardPkg.className = "result-card bg-blue";
     
-    let pkgHTML = `<h3>INFO PAKET</h3>`;
+    let pkgHTML = `<h3><i class="fa-solid fa-box-open"></i> INFO PAKET</h3>`;
 
     if (pInfo.error_message && pInfo.packages && pInfo.packages.length === 0) {
       pkgHTML += `<div class="alert-msg">${pInfo.error_message}</div>`;
@@ -70,10 +77,11 @@ function renderHumanReadable(dataObj) {
         const name = pkg.name || pkg.pkg_name || `Paket ${index + 1}`;
         const activeUntil = pkg.active_until || pkg.exp_date || pkg.expired || 'Tidak diketahui';
         
+        // Desain daftar paket dibuat lebih mencolok
         pkgHTML += `
           <div class="pkg-item">
-            <strong>${name}</strong><br>
-            <span>Expired: ${activeUntil}</span>
+            <span class="pkg-title"><i class="fa-solid fa-cube"></i> ${name}</span>
+            <span class="pkg-exp"><i class="fa-regular fa-clock"></i> Exp: ${activeUntil}</span>
           </div>
         `;
       });
