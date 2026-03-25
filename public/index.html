@@ -2,10 +2,11 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DOMPUL CHECKER - XL/AXIS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>DOMPUL CK - XL/AXIS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+      /* --- NEO BRUTALISM BASE --- */
       :root {
         --bg: #f4f0ea;
         --border: #000;
@@ -13,10 +14,11 @@
         --blue: #7DF9FF;
         --pink: #FF90E8;
         --green: #23A094;
-        --shadow: 6px 6px 0px 0px #000;
+        --shadow: 5px 5px 0px 0px #000;
+        --header-h: 60px; /* Tinggi header app */
       }
       
-      * { box-sizing: border-box; }
+      * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
       
       body { 
         font-family: 'Courier New', Courier, monospace; 
@@ -28,179 +30,229 @@
         flex-direction: column;
         align-items: center;
         min-height: 100vh;
-        padding: 30px 15px;
+        /* Padding top agar konten tidak tertutup fixed header */
+        padding: calc(var(--header-h) + 20px) 15px 30px;
       }
 
-      .wrap { 
-        width: 100%; 
-        max-width: 550px; 
+      .wrap { width: 100%; max-width: 500px; }
+
+      /* --- 1. FIXED APP HEADER --- */
+      .app-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--header-h);
+        background: #000;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        border-bottom: 4px solid var(--yellow);
+        z-index: 1000;
+        box-shadow: 0 4px 0 #000;
       }
 
-      /* HEADER & TITLE */
-      .page-header {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-
-      .page-header h1 {
-        font-size: 36px;
-        margin: 0;
+      .app-title {
+        font-size: 20px;
         text-transform: uppercase;
         letter-spacing: -1px;
+        font-weight: 900;
+      }
+
+      .info-link-btn {
         background: var(--yellow);
-        display: inline-block;
-        padding: 5px 15px;
-        border: 4px solid #000;
-        box-shadow: 4px 4px 0px 0px #000;
+        color: #000;
+        border: 3px solid #000;
+        padding: 5px 10px;
+        font-size: 12px;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 3px 3px 0px #000;
+        text-transform: uppercase;
+        transition: all 0.1s;
       }
 
-      /* INFO & DISCLAIMER BOX */
-      .info-box {
+      .info-link-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px #000;
+      }
+
+      /* --- 2. INFORMATION MODAL (POPUP) --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-content {
         background: #fff;
-        border: 3px solid var(--border);
-        padding: 15px;
-        margin-bottom: 25px;
-        box-shadow: 4px 4px 0px 0px #000;
-        font-size: 14px;
-        line-height: 1.5;
+        border: 4px solid #000;
+        box-shadow: 8px 8px 0px #000;
+        width: 100%;
+        max-width: 450px;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding: 25px;
+        position: relative;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
       }
 
-      .info-box span { display: block; margin-bottom: 8px; }
-      .tag-aman { background: var(--green); color: #fff; padding: 2px 6px; border: 2px solid #000; font-size: 12px; }
+      .modal-overlay.open .modal-content {
+        transform: scale(1);
+      }
 
-      /* MAIN APP CARD */
+      .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #FF4C4C;
+        color: #fff;
+        border: 3px solid #000;
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        font-weight: 900;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+      }
+
+      .modal-content h2 {
+        text-transform: uppercase;
+        background: var(--blue);
+        display: inline-block;
+        padding: 0 8px;
+        border: 3px solid #000;
+        margin-top: 0;
+        font-size: 22px;
+      }
+
+      .info-section { margin-bottom: 20px; font-size: 14px; line-height: 1.5; }
+      .info-section strong { display: block; margin-bottom: 5px; text-transform: uppercase; color: #000; border-bottom: 2px solid #000; padding-bottom: 3px;}
+      .info-section ul { margin: 0; padding-left: 18px; }
+      .tag-aman { background: var(--green); color: #fff; padding: 2px 6px; border: 2px solid #000; font-size: 11px; font-weight: 900; }
+
+      /* --- MAIN APP CARD & INPUT --- */
       .brutal-box {
         background: #fff;
         border: 4px solid var(--border);
         box-shadow: var(--shadow);
         padding: 20px;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
       }
 
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
+      .input-group { display: flex; flex-direction: column; gap: 12px; }
 
       input {
-        width: 100%;
-        padding: 15px;
-        font-size: 18px;
-        font-weight: bold;
-        border: 3px solid var(--border);
-        background: #fdfdfd;
-        outline: none;
+        width: 100%; padding: 16px; font-size: 16px; font-weight: bold;
+        border: 3px solid var(--border); background: #fdfdfd; outline: none;
+        border-radius: 0; /* Reset mobile rounding */
       }
-      
       input:focus { background: var(--yellow); }
 
       button.action-btn {
-        padding: 15px;
-        font-size: 18px;
-        font-weight: 900;
-        border: 3px solid var(--border);
-        background: var(--yellow);
-        cursor: pointer;
-        box-shadow: 4px 4px 0px 0px #000;
-        transition: all 0.1s ease-in-out;
-        text-transform: uppercase;
-        width: 100%;
+        padding: 16px; font-size: 18px; font-weight: 900;
+        border: 3px solid var(--border); background: var(--yellow);
+        cursor: pointer; box-shadow: 4px 4px 0px 0px #000;
+        text-transform: uppercase; width: 100%; transition: all 0.1s;
       }
+      button.action-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0px 0px #000; }
+      button:disabled { opacity: 0.6; cursor: not-allowed; }
 
-      button.action-btn:active {
-        transform: translate(4px, 4px);
-        box-shadow: 0px 0px 0px 0px #000;
-      }
-
-      button:disabled { opacity: 0.7; cursor: not-allowed; }
-
-      /* RESULTS FORMATTING (HUMAN READABLE) */
-      .results-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        margin-top: 25px;
-      }
-
-      .result-card {
-        border: 3px solid var(--border);
-        padding: 15px;
-        box-shadow: 4px 4px 0px 0px #000;
-      }
-
-      .result-card h3 {
-        margin: 0 0 15px;
-        font-size: 16px;
-        text-transform: uppercase;
-        border-bottom: 3px solid #000;
-        padding-bottom: 5px;
-      }
-
-      .data-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        font-size: 14px;
-        border-bottom: 1px dashed rgba(0,0,0,0.3);
-        padding-bottom: 4px;
-      }
-
+      /* --- RESULTS FORMATTING --- */
+      .results-grid { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+      .result-card { border: 3px solid var(--border); padding: 15px; box-shadow: 4px 4px 0px 0px #000; }
+      .result-card h3 { margin: 0 0 15px; font-size: 16px; text-transform: uppercase; border-bottom: 3px solid #000; padding-bottom: 5px; }
+      .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px dashed rgba(0,0,0,0.3); padding-bottom: 4px; gap: 10px;}
       .data-row span { opacity: 0.8; }
-      .data-row strong { text-align: right; word-break: break-all; max-width: 60%; }
+      .data-row strong { text-align: right; word-break: break-all; max-width: 65%; }
+      .pkg-item { background: rgba(255,255,255,0.5); border: 2px solid #000; padding: 10px; margin-bottom: 10px; font-size: 14px; }
+      .alert-msg { background: #fff; border: 2px solid #000; padding: 10px; font-weight: bold; text-align: center; font-size: 14px;}
+      #raw-out { margin-top: 20px; display: none; background: #FF4C4C; border: 3px solid #000; padding: 15px; color:#fff; word-break: break-all; font-size: 12px;}
 
-      .pkg-item {
-        background: rgba(255,255,255,0.5);
-        border: 2px solid #000;
-        padding: 10px;
-        margin-bottom: 10px;
-        font-size: 14px;
-      }
-
-      .alert-msg {
-        background: #fff;
-        border: 2px solid #000;
-        padding: 10px;
-        font-weight: bold;
-        text-align: center;
-      }
-
-      #raw-out { margin-top: 20px; display: none; background: #FF4C4C; border: 3px solid #000; padding: 15px; color:#fff; word-break: break-all;}
-
-      /* SOCIALS */
-      .social-section { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+      /* --- SOCIALS --- */
+      .social-section { margin-top: 10px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
       .wa-channel-btn {
         display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
-        background: #25D366; color: #000; text-decoration: none; padding: 16px 15px;
-        border: 3px solid #000; font-size: 15px; font-weight: 900; box-shadow: var(--shadow);
+        background: #25D366; color: #000; text-decoration: none; padding: 15px;
+        border: 3px solid #000; font-size: 14px; font-weight: 900; box-shadow: var(--shadow);
         text-align: center;
       }
-      .social-icons { display: flex; gap: 15px; margin-top: 10px; }
+      .social-icons { display: flex; gap: 15px; margin-top: 5px; }
       .soc-icon { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; background: #fff; border: 3px solid #000; color: #000; font-size: 20px; text-decoration: none; box-shadow: 3px 3px 0px 0px #000; }
       .soc-icon:hover { background: var(--blue); }
 
-      /* FOOTER */
-      .footer { margin-top: 40px; text-align: center; font-size: 14px; font-weight: 900; background: #000; color: #fff; padding: 10px; border: 3px solid #000; }
+      /* --- FOOTER --- */
+      .footer { margin-top: 40px; text-align: center; font-size: 12px; font-weight: 900; background: #000; color: #fff; padding: 10px; border: 3px solid #000; }
 
+      /* Utils */
       .bg-pink { background: var(--pink); }
       .bg-blue { background: var(--blue); }
     </style>
   </head>
   <body>
+
+    <header class="app-header">
+      <div class="app-title">DOMPUL CK</div>
+      <button id="open-info" class="info-link-btn">baca ini yaa <i class="fa-solid fa-circle-info"></i></button>
+    </header>
+
+    <div id="info-modal" class="modal-overlay">
+      <div class="modal-content">
+        <button id="close-info" class="close-modal">&times;</button>
+        <h2>PANDUAN & INFO</h2>
+        
+        <div class="info-section">
+          <strong>📖 Deskripsi & Fungsi</strong>
+          Tool sederhana berbasis web untuk mengecek detail informasi kartu prabayar kamu, meliputi status kartu, sisa pulsa, masa aktif, masa tenggang, dan daftar paket yang sedang aktif.
+        </div>
+
+        <div class="info-section">
+          <strong>🛠️ Cara Pakai</strong>
+          <ul>
+            <li>Masukkan nomor XL atau AXIS kamu di kotak input.</li>
+            <li>Gunakan format angka saja (contoh: 0859... atau 62859...).</li>
+            <li>Klik tombol "Cari Data".</li>
+            <li>Tunggu beberapa detik, hasil akan muncul di bawahnya.</li>
+          </ul>
+        </div>
+
+        <div class="info-section">
+          <strong>📡 Hanya Support</strong>
+          Web ini khusus untuk pengguna operator <strong>XL Axiata</strong> dan <strong>AXIS</strong> saja.
+        </div>
+
+        <div class="info-section">
+          <strong>✅ Web Aman (Anti Phising)</strong>
+          <span class="tag-aman">100% SECURE</span><br>
+          Web ini murni tool utilitas. Kami memproses data langsung via API tanpa perantara bot Telegram yang mencurigakan. Kami <strong>TIDAK MENYIMPAN</strong> log nomor hp atau data pribadi apapun di server kami.
+        </div>
+      </div>
+    </div>
+
     <div class="wrap">
       
-      <div class="page-header">
-        <h1>DOMPUL CHECKER</h1>
-      </div>
-
-      <div class="info-box">
-        <span><strong>⚙️ Kegunaan:</strong> Tool untuk mengecek detail informasi kartu, masa aktif, masa tenggang, dan daftar paket XL/AXIS kamu.</span>
-        <span><span class="tag-aman">100% AMAN</span> <strong>Anti Phising!</strong> Web ini memproses data langsung via API resmi tanpa menyimpan log nomor kamu. Tidak seperti bot Telegram bodong yang sering nyolong data.</span>
-      </div>
-
       <div class="brutal-box">
         <div class="input-group">
-          <input id="number" placeholder="Masukkan Nomor XL/AXIS..." autocomplete="off" />
+          <input id="number" type="tel" placeholder="Nomor XL/AXIS kamu..." autocomplete="off" pattern="[0-9]*" inputmode="numeric" />
           <button id="btn" class="action-btn">Cari Data</button>
         </div>
         
@@ -223,11 +275,11 @@
       </div>
 
       <div class="footer">
-        &lt; Credit: Crafted with ☕ by Rahmat Web Dev /&gt;
+        &lt; Credit: Crafted by Rahmat Web Dev /&gt;
       </div>
 
     </div>
 
     <script src="app.js"></script>
   </body>
-  </html>
+    </html> 
