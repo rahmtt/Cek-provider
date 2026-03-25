@@ -4,6 +4,23 @@ const btn = $("btn");
 const resultsContainer = $("results-container");
 const rawOut = $("raw-out");
 
+// --- MODAL LOGIC (Baru) ---
+const modal = $("info-modal");
+const openModalBtn = $("open-info");
+const closeModalBtn = $("close-info");
+
+const toggleModal = () => modal.classList.toggle("open");
+
+openModalBtn.addEventListener("click", toggleModal);
+closeModalBtn.addEventListener("click", toggleModal);
+// Tutup modal jika user klik di luar area konten modal
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) toggleModal();
+});
+
+
+// --- DATA PARSING LOGIC (Tetap Aman) ---
+
 function showError(message) {
   resultsContainer.innerHTML = "";
   rawOut.style.display = "block";
@@ -19,7 +36,7 @@ function renderHumanReadable(dataObj) {
     return;
   }
 
-  // 1. KARTU INFO (Mengekstrak data dari subs_info)
+  // 1. KARTU INFO
   if (dataObj.subs_info) {
     const s = dataObj.subs_info;
     const cardInfo = document.createElement("div");
@@ -37,7 +54,7 @@ function renderHumanReadable(dataObj) {
     resultsContainer.appendChild(cardInfo);
   }
 
-  // 2. PAKET INFO (Mengekstrak data dari package_info)
+  // 2. PAKET INFO
   if (dataObj.package_info) {
     const pInfo = dataObj.package_info;
     const cardPkg = document.createElement("div");
@@ -45,14 +62,11 @@ function renderHumanReadable(dataObj) {
     
     let pkgHTML = `<h3>INFO PAKET</h3>`;
 
-    // Cek apakah ada pesan error spesifik (misal: tidak memiliki paket)
     if (pInfo.error_message && pInfo.packages && pInfo.packages.length === 0) {
       pkgHTML += `<div class="alert-msg">${pInfo.error_message}</div>`;
     } 
-    // Jika ada paket aktif, loop datanya
     else if (pInfo.packages && pInfo.packages.length > 0) {
       pInfo.packages.forEach((pkg, index) => {
-        // Karena kadang struktur API beda, kita render fleksibel
         const name = pkg.name || pkg.pkg_name || `Paket ${index + 1}`;
         const activeUntil = pkg.active_until || pkg.exp_date || pkg.expired || 'Tidak diketahui';
         
@@ -71,19 +85,19 @@ function renderHumanReadable(dataObj) {
     resultsContainer.appendChild(cardPkg);
   }
 
-  // Jika suatu saat API berubah dan nggak ada subs_info/package_info
+  // Fallback Raw
   if (!dataObj.subs_info && !dataObj.package_info) {
      const fallbackCard = document.createElement("div");
      fallbackCard.className = "result-card bg-yellow";
-     fallbackCard.innerHTML = `<h3>RAW DATA</h3><pre style="font-size:12px; white-space:pre-wrap;">${JSON.stringify(dataObj, null, 2)}</pre>`;
+     fallbackCard.innerHTML = `<h3>RAW DATA</h3><pre style="font-size:11px; white-space:pre-wrap;">${JSON.stringify(dataObj, null, 2)}</pre>`;
      resultsContainer.appendChild(fallbackCard);
   }
 }
 
 async function run() {
-  const number = input.value.trim();
+  const number = input.value.replace(/[^0-9]/g, ''); // Ambil angka saja
   if (!number) {
-    showError("Nomor tidak boleh kosong bozz!");
+    showError("Masukin nomornya dulu bos!");
     return;
   }
 
@@ -102,13 +116,12 @@ async function run() {
     const data = await res.json().catch(() => ({}));
 
     if (res.ok && data?.success) {
-      // Panggil fungsi parse yang baru!
       renderHumanReadable(data.results);
     } else {
-      showError(data?.message || "Gagal mengambil data, mungkin nomor salah atau server limit.");
+      showError(data?.message || "Gagal mengambil data, mungkin API sedang limit.");
     }
   } catch (e) {
-    showError("Terjadi kesalahan jaringan / server.");
+    showError("Terjadi kesalahan jaringan.");
   } finally {
     btn.disabled = false;
     btn.textContent = "CARI DATA";
@@ -118,4 +131,4 @@ async function run() {
 btn.addEventListener("click", run);
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") run();
-});
+}); 
