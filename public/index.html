@@ -3,10 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DOMPUL CHECKER</title>
+    <title>DOMPUL CHECKER - XL/AXIS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-      /* NEO BRUTALISM BASE STYLE */
       :root {
         --bg: #f4f0ea;
         --border: #000;
@@ -15,7 +14,6 @@
         --pink: #FF90E8;
         --green: #23A094;
         --shadow: 6px 6px 0px 0px #000;
-        --shadow-hover: 2px 2px 0px 0px #000;
       }
       
       * { box-sizing: border-box; }
@@ -30,57 +28,75 @@
         flex-direction: column;
         align-items: center;
         min-height: 100vh;
-        padding: 40px 20px;
+        padding: 30px 15px;
       }
 
       .wrap { 
         width: 100%; 
-        max-width: 600px; 
+        max-width: 550px; 
       }
 
-      /* BRUTALIST COMPONENTS */
+      /* HEADER & TITLE */
+      .page-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .page-header h1 {
+        font-size: 36px;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        background: var(--yellow);
+        display: inline-block;
+        padding: 5px 15px;
+        border: 4px solid #000;
+        box-shadow: 4px 4px 0px 0px #000;
+      }
+
+      /* INFO & DISCLAIMER BOX */
+      .info-box {
+        background: #fff;
+        border: 3px solid var(--border);
+        padding: 15px;
+        margin-bottom: 25px;
+        box-shadow: 4px 4px 0px 0px #000;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .info-box span { display: block; margin-bottom: 8px; }
+      .tag-aman { background: var(--green); color: #fff; padding: 2px 6px; border: 2px solid #000; font-size: 12px; }
+
+      /* MAIN APP CARD */
       .brutal-box {
         background: #fff;
         border: 4px solid var(--border);
         box-shadow: var(--shadow);
-        padding: 24px;
+        padding: 20px;
         margin-bottom: 30px;
       }
 
-      h1 { 
-        font-size: 32px; 
-        margin: 0 0 10px; 
-        text-transform: uppercase; 
-        letter-spacing: -1px;
-        background: var(--yellow);
-        display: inline-block;
-        padding: 0 10px;
-        border: 3px solid #000;
-      }
-      
-      p { margin: 0 0 15px; font-size: 16px; }
-
       .input-group {
         display: flex;
+        flex-direction: column;
         gap: 12px;
-        flex-wrap: wrap;
       }
 
       input {
-        flex: 1;
-        min-width: 200px;
-        padding: 14px;
+        width: 100%;
+        padding: 15px;
         font-size: 18px;
         font-weight: bold;
         border: 3px solid var(--border);
-        background: #fff;
+        background: #fdfdfd;
         outline: none;
       }
       
-      input:focus { background: #f0f8ff; }
+      input:focus { background: var(--yellow); }
 
       button.action-btn {
-        padding: 14px 24px;
+        padding: 15px;
         font-size: 18px;
         font-weight: 900;
         border: 3px solid var(--border);
@@ -89,6 +105,7 @@
         box-shadow: 4px 4px 0px 0px #000;
         transition: all 0.1s ease-in-out;
         text-transform: uppercase;
+        width: 100%;
       }
 
       button.action-btn:active {
@@ -98,134 +115,103 @@
 
       button:disabled { opacity: 0.7; cursor: not-allowed; }
 
-      /* RESULTS GRID */
+      /* RESULTS FORMATTING (HUMAN READABLE) */
       .results-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        display: flex;
+        flex-direction: column;
         gap: 15px;
-        margin-top: 20px;
+        margin-top: 25px;
       }
 
       .result-card {
         border: 3px solid var(--border);
         padding: 15px;
         box-shadow: 4px 4px 0px 0px #000;
-        word-break: break-word;
       }
 
       .result-card h3 {
-        margin: 0 0 10px;
-        font-size: 14px;
+        margin: 0 0 15px;
+        font-size: 16px;
         text-transform: uppercase;
-        border-bottom: 2px solid #000;
+        border-bottom: 3px solid #000;
         padding-bottom: 5px;
       }
 
-      .result-card pre, .result-card .val {
-        margin: 0;
-        font-size: 16px;
-        white-space: pre-wrap;
-      }
-
-      #raw-out { margin-top: 20px; display: none; background: #fff; }
-
-      /* SOCIALS & CHANNELS */
-      .social-section {
-        margin-top: 40px;
+      .data-row {
         display: flex;
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 14px;
+        border-bottom: 1px dashed rgba(0,0,0,0.3);
+        padding-bottom: 4px;
       }
 
-      .wa-channel-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        width: 100%;
-        background: #25D366; /* WA Green */
-        color: #000;
-        text-decoration: none;
-        padding: 16px 20px;
-        border: 3px solid #000;
-        font-size: 16px;
-        font-weight: 900;
-        box-shadow: var(--shadow);
-        transition: all 0.1s ease;
+      .data-row span { opacity: 0.8; }
+      .data-row strong { text-align: right; word-break: break-all; max-width: 60%; }
+
+      .pkg-item {
+        background: rgba(255,255,255,0.5);
+        border: 2px solid #000;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-size: 14px;
       }
 
-      .wa-channel-btn:active {
-        transform: translate(4px, 4px);
-        box-shadow: 0px 0px 0px 0px #000;
-      }
-
-      .social-icons {
-        display: flex;
-        gap: 15px;
-        margin-top: 10px;
-      }
-
-      .soc-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 50px;
-        height: 50px;
+      .alert-msg {
         background: #fff;
-        border: 3px solid #000;
-        color: #000;
-        font-size: 24px;
-        text-decoration: none;
-        box-shadow: 3px 3px 0px 0px #000;
-        transition: all 0.1s ease;
+        border: 2px solid #000;
+        padding: 10px;
+        font-weight: bold;
+        text-align: center;
       }
 
-      .soc-icon:hover { background: var(--blue); }
-      .soc-icon:active {
-        transform: translate(3px, 3px);
-        box-shadow: 0px 0px 0px 0px #000;
+      #raw-out { margin-top: 20px; display: none; background: #FF4C4C; border: 3px solid #000; padding: 15px; color:#fff; word-break: break-all;}
+
+      /* SOCIALS */
+      .social-section { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+      .wa-channel-btn {
+        display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+        background: #25D366; color: #000; text-decoration: none; padding: 16px 15px;
+        border: 3px solid #000; font-size: 15px; font-weight: 900; box-shadow: var(--shadow);
+        text-align: center;
       }
+      .social-icons { display: flex; gap: 15px; margin-top: 10px; }
+      .soc-icon { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; background: #fff; border: 3px solid #000; color: #000; font-size: 20px; text-decoration: none; box-shadow: 3px 3px 0px 0px #000; }
+      .soc-icon:hover { background: var(--blue); }
 
       /* FOOTER */
-      .footer {
-        margin-top: 40px;
-        text-align: center;
-        font-size: 14px;
-        font-weight: 900;
-        background: #000;
-        color: #fff;
-        padding: 10px 15px;
-        border-radius: 4px;
-      }
+      .footer { margin-top: 40px; text-align: center; font-size: 14px; font-weight: 900; background: #000; color: #fff; padding: 10px; border: 3px solid #000; }
 
-      /* UTILS */
       .bg-pink { background: var(--pink); }
       .bg-blue { background: var(--blue); }
-      .bg-yellow { background: var(--yellow); }
-      .bg-white { background: #fff; }
     </style>
   </head>
   <body>
     <div class="wrap">
       
-      <div class="brutal-box">
+      <div class="page-header">
         <h1>DOMPUL CHECKER</h1>
-        <p>Masukkan nomor XL/AXIS lo untuk melihat data paket dan pulsa.</p>
+      </div>
 
+      <div class="info-box">
+        <span><strong>⚙️ Kegunaan:</strong> Tool untuk mengecek detail informasi kartu, masa aktif, masa tenggang, dan daftar paket XL/AXIS kamu.</span>
+        <span><span class="tag-aman">100% AMAN</span> <strong>Anti Phising!</strong> Web ini memproses data langsung via API resmi tanpa menyimpan log nomor kamu. Tidak seperti bot Telegram bodong yang sering nyolong data.</span>
+      </div>
+
+      <div class="brutal-box">
         <div class="input-group">
-          <input id="number" placeholder="Contoh: 6285934..." autocomplete="off" />
-          <button id="btn" class="action-btn">CEK NOMOR</button>
+          <input id="number" placeholder="Masukkan Nomor XL/AXIS..." autocomplete="off" />
+          <button id="btn" class="action-btn">Cari Data</button>
         </div>
         
         <div id="results-container" class="results-grid"></div>
-        <pre id="raw-out" class="brutal-box"></pre>
+        <pre id="raw-out"></pre>
       </div>
 
       <div class="social-section">
         <a href="https://whatsapp.com/channel/0029VbBjyjlJ93wa6hwSWa0p" target="_blank" class="wa-channel-btn">
-          <i class="fa-brands fa-whatsapp" style="font-size: 24px; color: #fff; -webkit-text-stroke: 1px #000;"></i>
-          ✧･ﾟ: [𝙍]𝙝𝙢𝙏 | 𝘾𝙤𝙙𝙚⚙️𝘼𝙄 𝙡 :･ﾟ✧ - Join Saluran
+          <i class="fa-brands fa-whatsapp" style="font-size: 22px; color: #fff; -webkit-text-stroke: 1px #000;"></i>
+          ✧･ﾟ: [𝙍]𝙝𝙢𝙏 | 𝘾𝙤𝙙𝙚⚙️𝘼𝙄 𝙡 :･ﾟ✧<br>Join Saluran
         </a>
 
         <div class="social-icons">
@@ -244,4 +230,4 @@
 
     <script src="app.js"></script>
   </body>
-  </html> 
+  </html>
